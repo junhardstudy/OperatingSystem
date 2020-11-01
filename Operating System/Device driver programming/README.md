@@ -315,7 +315,9 @@ static ssize_t gpio_write(struct file* file, const char* buf, size_t len, loff_t
 ```
 <br>
 <br>
+
 ## Circuit 구성
+
 ![circuit1](./image/circuit1.jpg)
 
 ![circuit2](./image/circuit2.jpg)
