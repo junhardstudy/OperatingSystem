@@ -22,7 +22,7 @@ device file을 이용하여 device를 제어하게 됩니다. device file은 dev
 <br>
 <br>
 <br>		
-```
+```c
 int fd = -1;
 printf("[user level] LED control HomeWork ap is start!\n");
 fd = open("/dev/ledtest", O_RDWR);
@@ -42,7 +42,7 @@ process에서 오류 메시지를 띄우고 프로그램을 종료하게 하였�
 <br>
 <br>
 <br>
-```
+```c
 while(1){
 	printf("Prees the button 'A' or 'B' ('Q' button is exit): ");
 	key = getch();
@@ -87,7 +87,7 @@ device file에 file제어 함수들을 이용하여 제어 요청을 하게되�
 <br>
 <br>
 <br>	
-```
+```c
 int getch(void){
 	int ch;
 	struct termios buf, save;
@@ -121,7 +121,7 @@ insmod led_module.ko
 <br>
 ### Device driver's major number and minor number
 	
-```
+```c
 #define GPIO_MAJOR	245
 #define GPIO_MINOR	0
 		
@@ -137,7 +137,7 @@ Minor number인 GPIO_MINOR의 경우, 하나의 디바이스 드라이버 내에
 <br>
 <br>
 <br>
-```
+```c
 register_chrdev_region(devno, 1, GPIO_DEVICE);
 register_chrdev_region(devno, 1, GPIO_DEVICE);
 cdev_init(&gpio_cdev, &gpio_fop);
@@ -152,7 +152,7 @@ Linux device driver의 경우, 크게 character driver, block driver, network dr
 <br>
 <br>
 <br>
-```
+```c
 map=ioremap(GPIO_BASE, GPIO_SIZE);
 gpio=(volatile unsigned int*)map;
 
@@ -167,7 +167,7 @@ in/out 모드를 수행할 address를 설정하였습니다.
 <br>
 <br>
 <br>
-```
+```c
 gpio_irq_num = gpio_to_irq(TEC_SWITCH);
 
 if(request_irq(gpio_irq_num, irq_gpio, IRQF_TRIGGER_RISING, "gpio_21", NULL)<0){
@@ -182,7 +182,7 @@ irq_gpio()함수, 상승 엣지인 IRQF_TRIGGER_RISING를 가지는 인터럽트
 <br>
 <br>
 ### Interrupt
-```
+```c
 irqreturn_t irq_gpio(int irq, void * device_id){
 	printk("interrupt is occur!");
 	if(state == 0){
@@ -205,7 +205,7 @@ irqreturn_t irq_gpio(int irq, void * device_id){
 <br>
 ### Device driver interface
 
-```
+```c
 static struct file_operations gpio_fop ={
 	.owner = THIS_MODULE,
 	.open=gpio_open, 
@@ -223,7 +223,7 @@ module을 등록할 대, file_operations라는 구조체도 kernel에 알려주�
 <br>
 <br>
 <br>	
-```
+```c
 long led_control_unlocked_ioctl(struct file * file, unsigned int command, unsigned long argument){
 int i;
 printk("ioctl is occur!\n");
@@ -263,7 +263,7 @@ switch(command){
 이외에 write, read, release, open함수는 아래와 같이 구현되어 있는데, write 함수의 경우는 구현만 되어 있고 실제 user application에서는 사용되지 않습니다. 위에서 언급했다 싶이
 write()함수보다는 ioctl()함수를 통해 여러 제어를 하는게 더 적절해 보였습니다. 만약 사용하고자 한다면 user application process에서 device file에 write할 때, a, 1, 또는 0을
 전달해주면 ioctl()함수처럼 똑같은 동작을 수행하게 됩니다.  
-```
+```c
 static int gpio_open(struct inode *inode, struct file *file){
 	try_module_get(THIS_MODULE);
 	printk("OPEN - gpio device\n");
