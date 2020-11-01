@@ -108,16 +108,17 @@ insmod led_module.ko
 ```	
 리눅스 디바이스 드라이버는 kernel module로서 취급하여 linux kernel에 등록하여 사용하게 되는데, 등록방법은 kernel module로 컴파일 된 
 .ko파일을 insmod 명령어를 통해 kernel에 등록 시킬 수 있습니다. (이외에 아예 kernel source내에 포함 시켜 같이 컴파일 할 수도 있음)
-
-
+<br>
+<br>
+<br>
+<br>
 ### Device driver's major number and minor number
 	
 ```
-	#define GPIO_MAJOR	245
-	#define GPIO_MINOR	0
+#define GPIO_MAJOR	245
+#define GPIO_MINOR	0
 		
-	devno=MKDEV(GPIO_MAJOR, GPIO_MINOR);
-		
+devno=MKDEV(GPIO_MAJOR, GPIO_MINOR);		
 ```	
 Major number인 GPIO_MAJOR의 경우, kernel에서 device driver를 구분 및 연결하는데 사용 됩니다. 총 1byte의 길이를 가질 수 있습니다.
 
@@ -248,15 +249,13 @@ switch(command){
 ```		
 .unlocked_ioctl이 받는 함수 led_control_unlocked_ioctl은 빨간색 LED를 on, off, 또는 3번 점멸 하는 등 여러 제어가 필요하게 되므로 write보다는 ioctl 함수를
 통해 제어하도록 하였습니다. led_control_unlocked_ioctl의 2번째 parameter인 command는 user application에서 ioctl()함수를 호출하면서 전달받게 됩니다.
-	
-	
+<br>
+<br>
+<br>
+<br>
 이외에 write, read, release, open함수는 아래와 같이 구현되어 있는데, write 함수의 경우는 구현만 되어 있고 실제 user application에서는 사용되지 않습니다. 위에서 언급했다 싶이
 write()함수보다는 ioctl()함수를 통해 여러 제어를 하는게 더 적절해 보였습니다. 만약 사용하고자 한다면 user application process에서 device file에 write할 때, a, 1, 또는 0을
 전달해주면 ioctl()함수처럼 똑같은 동작을 수행하게 됩니다.  
-<br>
-<br>
-<br>
-<br>
 ```
 static int gpio_open(struct inode *inode, struct file *file){
 	try_module_get(THIS_MODULE);
@@ -311,6 +310,7 @@ static ssize_t gpio_write(struct file* file, const char* buf, size_t len, loff_t
 <br>
 <br>
 <br>
+
 ## 동작 모습
 
 <iframe width="893" height="502" src="https://www.youtube.com/embed/INjtP3w68kc" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
