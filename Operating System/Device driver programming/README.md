@@ -8,8 +8,7 @@
 ## User application code
 
 ```
-	mknod /dev/led_module 245 0
-	
+	mknod /dev/led_module 245 0	
 ```
 
 Linux에서는 device를 하나의 file 단위로 관리를 하고있습니다. 따라서 user application process는 직접 디바이스를 제어하지 않고, 간접적으로
@@ -286,4 +285,5 @@ static ssize_t gpio_write(struct file* file, const char* buf, size_t len, loff_t
 ```
 
 ## 동작 모습
-<iframe width="100%" height="100%" src="https://www.youtube.com/embed/ten6MIvhNzo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<iframe width="640" height="360" src="https://www.youtube.com/embed/ten6MIvhNzo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
