@@ -14,8 +14,8 @@ Linux에서는 device를 하나의 file 단위로 관리를 하고있습니다. 
 device file을 이용하여 device를 제어하게 됩니다. device file은 device node라고도 불리며, mknod 명령어를 통해 생성합니다.
 <br>
 <br>
-<br>	
-	
+<br>
+<br>		
 ```
 int fd = -1;
 printf("[user level] LED control HomeWork ap is start!\n");
@@ -32,8 +32,10 @@ user application process에서 open()함수를 이용하여 해당 device file�
 linux kernel에서 등록한 device driver를 검색하게 됩니다. device driver검색은 linux kernel에서 각 device group별로 검색을 하게
 됩니다. 만약 해당 device driver를 찾지 못하게 되면, open()함수는 -1값을 return 받게 되고 그에 따라service를 요청한 user application 
 process에서 오류 메시지를 띄우고 프로그래믕ㄹ 종료하게 하였였습니다.
-<br>	
-	
+<br>
+<br>
+<br>
+<br>
 ```
 while(1){
 	printf("Prees the button 'A' or 'B' ('Q' button is exit): ");
@@ -75,8 +77,10 @@ while(1){
 device file에 file제어 함수들을 이용하여 제어 요청을 하게되면 device driver가 해당 요청을 받아 직접 디바이스를 제어하게 됩니다.
 
 이번 과제의 경우, 여러 제어가 요구 되므로 단순히 write, read보다는 ioctl()함수를 통해 센서를 제어하도록 하였습니다.
-	
-	
+<br>
+<br>
+<br>
+<br>	
 ```
 int getch(void){
 	int ch;
@@ -121,8 +125,10 @@ Minor number인 GPIO_MINOR의 경우, 하나의 디바이스 드라이버 내에
 총 2bytes의 길이를 가질 수 있습니다. 
 
 해당 과제의 경우, major number를 245, minor number를 0번으로 하는 dev_t 구조체를 메크로 함수 MKDEV()를 통하여 얻을 수 있습니다.
-
-
+<br>
+<br>
+<br>
+<br>
 ```
 register_chrdev_region(devno, 1, GPIO_DEVICE);
 register_chrdev_region(devno, 1, GPIO_DEVICE);
@@ -134,8 +140,10 @@ add=cdev_add(&gpio_cdev, devno, cnt);
 Linux device driver의 경우, 크게 character driver, block driver, network driver 3가지의 group으로 나뉘게 됩니다. 저희는 device를 file처럼
 접근하여 직접 제어를 수행하는 형태를 가지므로 register_chrdev_region()함수를 통하여 1개의 char device를 GPIO_DEVICE로 등록해주게 됩니다.
 우리가 정의 한 file_operations 구조체를 등록 해 주기위해, cdev_init(), cdev_add()함수를 순차적으로 호출하여 cdev 구조체로 초기화 -> 커널에 등록하는 과정을 수행합니다.
-
-
+<br>
+<br>
+<br>
+<br>
 ```
 map=ioremap(GPIO_BASE, GPIO_SIZE);
 gpio=(volatile unsigned int*)map;
@@ -147,8 +155,10 @@ GPIO_OUT(RED_LED);
 ```
 라즈베리파이의 gpio핀들에 대한 물리 메모리 주소를 가상 메모리 주소로 맵핑하기 위해 ioremap()를 호출하고, 매크로 함수 GPIO_IN()과 GPIO_OUT()을 통하여 빨간색 LED와 초록색 LED의
 in/out 모드를 수행할 address를 설정하였습니다.
-
-
+<br>
+<br>
+<br>
+<br>
 ```
 gpio_irq_num = gpio_to_irq(TEC_SWITCH);
 
@@ -159,8 +169,10 @@ if(request_irq(gpio_irq_num, irq_gpio, IRQF_TRIGGER_RISING, "gpio_21", NULL)<0){
 마지막으로 interrupt 제어를 구현하는 부분입니다.
 텍트 스위치가 연결된 pin 번호 21인 TEC_SWITCH에 대한 인터럽트 address를 얻기 위해 gpio_to_irq()함수를 호출 해줍니다. 이렇게 얻은 address와 인터럽트 발생시 수행되어야 할 커널 함수인
 irq_gpio()함수, 상승 엣지인 IRQF_TRIGGER_RISING를 가지는 인터럽트 핸들러를 생성하기 위해 request_irq()함수가 사용됩니다.
-
-
+<br>
+<br>
+<br>
+<br>
 ### Interrupt
 ```
 irqreturn_t irq_gpio(int irq, void * device_id){
@@ -179,8 +191,10 @@ irqreturn_t irq_gpio(int irq, void * device_id){
 ```
 모듈 적재시, 인터럽트 핸들러에서 등록할 함수입니다. 텍트 스위치를 누르게 되면, 디바이스 드라이버가 ioctl()함수를 수행하고 있는 중이더라도 인터럽트 방식이기에 이전에 진행되던 동작이 중단되지 않고
 초록색 LED를 On/Off 할 수 있게 됩니다.
-
-
+<br>
+<br>
+<br>
+<br>
 ### Device driver interface
 
 ```
@@ -197,8 +211,10 @@ module을 등록할 대, file_operations라는 구조체도 kernel에 알려주�
 역할을 하여 입/출력등을 제어하게 됩니다.
 
 각각 write, read, release, open등에 대응되는 함수 이름을 넘겨주었고, 그 중에 특별한 것이 .unlocked_ioctl입니다.
-
-		
+<br>
+<br>
+<br>
+<br>	
 ```
 long led_control_unlocked_ioctl(struct file * file, unsigned int command, unsigned long argument){
 int i;
@@ -237,8 +253,10 @@ switch(command){
 이외에 write, read, release, open함수는 아래와 같이 구현되어 있는데, write 함수의 경우는 구현만 되어 있고 실제 user application에서는 사용되지 않습니다. 위에서 언급했다 싶이
 write()함수보다는 ioctl()함수를 통해 여러 제어를 하는게 더 적절해 보였습니다. 만약 사용하고자 한다면 user application process에서 device file에 write할 때, a, 1, 또는 0을
 전달해주면 ioctl()함수처럼 똑같은 동작을 수행하게 됩니다.  
-
-
+<br>
+<br>
+<br>
+<br>
 ```
 static int gpio_open(struct inode *inode, struct file *file){
 	try_module_get(THIS_MODULE);
@@ -289,7 +307,10 @@ static ssize_t gpio_write(struct file* file, const char* buf, size_t len, loff_t
 	return cnt;
 }
 ```
-
+<br>
+<br>
+<br>
+<br>
 ## 동작 모습
 
 <iframe width="893" height="502" src="https://www.youtube.com/embed/INjtP3w68kc" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
