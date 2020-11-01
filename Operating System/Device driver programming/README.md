@@ -313,6 +313,8 @@ static ssize_t gpio_write(struct file* file, const char* buf, size_t len, loff_t
 
 ## 동작 모습
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/INjtP3w68kc/0.jpg)](https://www.youtube.com/watch?v=INjtP3w68kc)
+#### 라즈베리파이 동작 유트브 영상 링크
+[![동작 영상](https://img.youtube.com/vi/ten6MIvhNzo/0.jpg)](https://www.youtube.com/watch?v=ten6MIvhNzo)
 
-<iframe width="893" height="502" src="https://www.youtube.com/embed/INjtP3w68kc" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+#### 라즈베리파이 커맨드 동작 유트브 영상 링크
+[![커맨드 동작 영상](https://img.youtube.com/vi/HBhZQhQGUaM/0.jpg)](https://www.youtube.com/watch?v=HBhZQhQGUaM)
