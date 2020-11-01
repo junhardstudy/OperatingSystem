@@ -313,4 +313,6 @@ static ssize_t gpio_write(struct file* file, const char* buf, size_t len, loff_t
 
 ## 동작 모습
 
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/INjtP3w68kc/0.jpg)](https://www.youtube.com/watch?v=INjtP3w68kc)
+
 <iframe width="893" height="502" src="https://www.youtube.com/embed/INjtP3w68kc" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
