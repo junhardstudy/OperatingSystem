@@ -3,7 +3,9 @@
 
 ![threadmemoryview](./image/threadmemoryview.jpg)
 
-스레드는 프로세스와 달리 프로세스 내에서 각 스레드마다 stack만 따로 할당 받고, code, data, heap영역은 공유하게 됩니다. 
+스레드는 프로세스와 달리 프로세스 내에서 각 스레드마다 stack만 따로 할당 받고, code, data, heap영역은 공유하게 됩니다.
+
+스레드(들)는 각 스레드가 속한 프로세스내에서는 unique한 id를 가지게 됩니다. 이를 pthread_t 타입으로 구분하게 됩니다.
 
 ## 리눅스 스레드 API 관련 함수들
 
@@ -40,57 +42,97 @@
 ### main() 함수
 
 ```c
-int main(int argc, char* argv[]){	
-	pthread_t p_thread1[5000];
-	pthread_t p_thread2[5000];
-	int thr_id1;
-	int thr_id2;
-	int i, j, k;//control variables in loop operation.
-
-	char p1_name[] = "Add_thread";
-	char p2_name[] = "Sub_thread";
-
-	
-	if(argc == 3 && !strcmp(argv[2], "build_mode")){//activate build(debugging) mode.
-		flag_mode = 1;
+if(argc == 3 && !strcmp(argv[2], "build_mode")){//activate build(debugging) mode.
+	flag_mode = 1;
+}
+else{
+	if(argc != 2){
+		printf("plz, type one integer number for main arguments!\n");
+		exit(-1);
 	}
-	else{
-		if(argc != 2){
-			printf("plz, type one integer number for main arguments!\n");
-			exit(-1);
+}
+```
+main()의 argument로 "build_mode"를 입력받게 되면 현재 실행되고 있는 프로세스의 id(pid)와 스레드 id, 스레드 name을 스레드가 생성 될 때마다 출력하게 됩니다.
+<br>
+<br>
+
+```c
+for(k = 10; k <= 1000; k = k*10){
+	weight = k;
+	printf("%d start\n", weight);
+	for(j = 0; j < 30; j++){
+		global_number = atoi(argv[1]);
+		if(flag_mode == 1)printf("initial global variable : %d\n", global_number);
+
+		for(i = 0; i <5000; i++){
+			thr_id1 = pthread_create(&p_thread1[i], NULL, add, (void*)p1_name);
+			thr_id2 = pthread_create(&p_thread2[i], NULL, sub, (void*)p2_name);
+			if(thr_id1 < 0 || thr_id2 < 0){
+				perror("thread create error!\n");
+				exit(0);
+			}
+	
 		}
-	}
-
-	for(k = 10; k <= 1000; k = k*10){
-		weight = k;
-		printf("%d start\n", weight);
-		for(j = 0; j < 30; j++){
-			global_number = atoi(argv[1]);
-			if(flag_mode == 1)printf("initial global variable : %d\n", global_number);
-
-			for(i = 0; i <5000; i++){
-				thr_id1 = pthread_create(&p_thread1[i], NULL, add, (void*)p1_name);
-				thr_id2 = pthread_create(&p_thread2[i], NULL, sub, (void*)p2_name);
-				if(thr_id1 < 0 || thr_id2 < 0){
-					perror("thread create error!\n");
-					exit(0);
-				}
 	
-			}
-	
-			for(i = 0; i < 5000; i++){
-				pthread_join(p_thread1[i], NULL);
-				pthread_join(p_thread2[i], NULL);		
-			}
+		for(i = 0; i < 5000; i++){
+			pthread_join(p_thread1[i], NULL);
+			pthread_join(p_thread2[i], NULL);		
+		}
 
-		printf("global = %d\n", global_number);
+	printf("global = %d\n", global_number);
 		
-		}
 	}
-	printf("main process is done!\n");
+}
+```
+본 프로그램은 mutex와 같은 스레드간의 자원공유에 대한 문제를 더욱 부각 시키기 위해, 스레드 생성과 소멸 부분을 k번 만큼 더 반복하도록 하였습니다.
+스레드 생성을 위해 pthread_create()함수를 호출하였으며, 각 인자값은 첫번째는 스레드id, attribute는 null, 스레드 생성 시 수행되어야 할 함수인 add() 또는 sub(),
+마지막으로 스레드 함수가 파라미터를 받을 수 있다는 것을 부각하기 위해 일부러 char포인터를 넘겨주었습니다.
 
-	return 0;
+스레드 생성에 관한 반복문이 끝나게 되면, 생성된 각 스레드가 종료될때까지 기다리기 위해 pthread_join()함수가 호출됩니다.
+
+### add(), sub() 함수
+
+스레드 생성 시 호출되어지는 스레드 함수로서, build_mode인 경우 여기서 해당 스레드 id, name, 프로세스 id가 호출되게 됩니다.
+
+```c
+void *add(void* data){	
+	int i;
+	pid_t pid;
+	pthread_t tid;
+	char* thread_name;
+
+
+	if(flag_mode == 1){
+		pid = getpid();
+		tid = pthread_self();
+		thread_name = (char*)data;
+		printf("current thread name : %s\n", thread_name);
+		printf("process id : %d\n", (unsigned int)pid);
+		printf("current thread id : %d\n", (unsigned int)tid);
+	}
+
+	for(i = 0; i < weight; i++)global_number += 1;
+
 }
 ```
 
-여기서 스레드를 생성하는 pthread_create()함수를 호출할 때 4번째 인자로 함수 파라미터 연습으로 값을 넘겨주었습니다. 
+```c
+void *sub(void *data){
+	int i;
+	pid_t pid;
+	pthread_t tid;
+	char* thread_name;
+
+	if(flag_mode == 1){
+		pid = getpid();
+		tid = pthread_self();
+		thread_name = (char*)data;
+		printf("current thread name : %s\n", thread_name);
+		printf("processid : %d\n", (unsigned int)pid);
+		printf("current thread id : %d\n", (unsigned int)tid);
+	}
+
+	for(i = 0; i < weight; i++)global_number -= 1;
+
+}
+```
