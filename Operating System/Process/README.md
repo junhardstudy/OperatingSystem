@@ -7,8 +7,8 @@
 
 리눅스에서는 fork()함수를 통해 새로운 프로세스를 생성할 수 있습니다. 이 때 부모 프로세스를 fork하게 현재 까지 수행한 상태의 자신(부모)의 프로세스를
 복제하여 자식프로세스를 생성하게 됩니다.  
-pid : process identifier로 os가 각 프로세스에게 부여하는 unique한 일련 번호인데
-ppid : 부모프로세스의 id 입니다. 어떤 프로세스로 부터 생성이 되었는지를 알려준다.
+pid : process identifier로 os가 각 프로세스에게 부여하는 unique한 일련 번호입니다.
+ppid : 부모프로세스의 id 입니다. 어떤 프로세스로 부터 생성이 되었는지를 알려 줍니다.
 pgid : 프로세스가 어느 그룹에 포함되어 있는지에 대한 정보를 알려줍니다. 보통 부모프로세스의 ppid가 pgid가 됩니다.
 
 ## 리눅스 프로세서 API 함수들
@@ -17,7 +17,7 @@ pgid : 프로세스가 어느 그룹에 포함되어 있는지에 대한 정보�
 	리눅스에서는 execl()함수를 통해 새로운 프로세스를 실행시킬 수 있습니다.
 	단, 이때 아래와 같이 현재 프로세스의 실행 분기를 덮어씌우게 되어, exectest실행 파일이 표시해야할 print문구가 나타나지 않게 됩니다.
 	
-	```
+	```c
 	exectest.c
 	void main(){
 		execl("/home/jun/Desktop/study/targetprocess","/home/jun/Desktop/study/targetprocess" , NULL);
@@ -25,7 +25,7 @@ pgid : 프로세스가 어느 그룹에 포함되어 있는지에 대한 정보�
 	}
 	```
 	
-	```
+	```c
 	targetprocess.c
 	void main(){
 		printf("target process is executed!\n");
@@ -35,7 +35,7 @@ pgid : 프로세스가 어느 그룹에 포함되어 있는지에 대한 정보�
 	target process is executed!</pre>
 
 2. fork()
-	```
+	```c
 	process_study.c
 	void main(){
 		pid_t pid;
@@ -66,13 +66,15 @@ pgid : 프로세스가 어느 그룹에 포함되어 있는지에 대한 정보�
 	
 <br>
 <br>
----
+
+***
+
 아래 소스코드는 부모 프로세스에서 자식 프로세스를 fork한뒤에 exec()함수를 사용하여, 생성된 자식 프로세스들이 다른 프로세스를 실행하여 덧셈, 뺄셈, 나눗셈, 팩토리얼 계산을
 해주는 프로그램 입니다.
 프로그램을 실행할 때 "build_mode"라는 문자열을 넘겨주면, 프로세스 id에 대한 자세한 값이 출력되게 됩니다.
 
 ###myshell.c
-```
+```c
 void main(int argc, char* argv[]){	
 	pid_t pid;
 
@@ -109,7 +111,7 @@ pid == 0이라면 자식 프로세스에서만 실행되므로, 덧셈, 뺄셈, 
 <br>
 <br>
 
-```
+```c
 void select_prog(){
 	char buf[255];
 	char* file_name;
@@ -164,10 +166,3 @@ plz, command line : ./div 10 3
 <font color="#8AE234"><b>jun@jun-VirtualBox</b></font>:<font color="#729FCF"><b>~/Desktop/study/process</b></font>$ ./myshell
 plz, command line : ./fact 4
 4! = 24</pre>
-	
-# Thread
-스레드는 프로레스내에서 실행되는 여러 흐름의 단위를 의미 합니다. 스레드에 대한 메모리 구조는 아래와 같은데,
-
-![threadmemoryview](./image/threadmemoryview.jpg)
-
-스레드는 프로세스와 달리 프로세스 내에서 각 스레드마다 stack만 따로 할당 받고, code, data, heap영역은 공유하게 됩니다. 
