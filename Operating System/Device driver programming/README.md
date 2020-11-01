@@ -8,23 +8,25 @@
 ## User application code
 
 ```
-	mknod /dev/led_module 245 0	
+mknod /dev/led_module 245 0	
 ```
 Linux에서는 device를 하나의 file 단위로 관리를 하고있습니다. 따라서 user application process는 직접 디바이스를 제어하지 않고, 간접적으로
 device file을 이용하여 device를 제어하게 됩니다. device file은 device node라고도 불리며, mknod 명령어를 통해 생성합니다.
+<br>
+<br>
 <br>	
 	
 ```
-	int fd = -1;
-	printf("[user level] LED control HomeWork ap is start!\n");
-	fd = open("/dev/ledtest", O_RDWR);
+int fd = -1;
+printf("[user level] LED control HomeWork ap is start!\n");
+fd = open("/dev/ledtest", O_RDWR);
 
-	if(fd < 0){
-		printf("[user level] device driver file can not open\n");
-		printf("[user level] program will be terminated!\n");
-		exit(1);
+if(fd < 0){
+	printf("[user level] device driver file can not open\n");
+	printf("[user level] program will be terminated!\n");
+	exit(1);
 	
-	}
+}
 ```	
 user application process에서 open()함수를 이용하여 해당 device file에 접근하게 되면, kernel에서는 open()함수를 서비스 해주기 위해
 linux kernel에서 등록한 device driver를 검색하게 됩니다. device driver검색은 linux kernel에서 각 device group별로 검색을 하게
