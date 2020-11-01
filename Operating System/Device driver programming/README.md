@@ -12,7 +12,7 @@
 ```
 Linux에서는 device를 하나의 file 단위로 관리를 하고있습니다. 따라서 user application process는 직접 디바이스를 제어하지 않고, 간접적으로
 device file을 이용하여 device를 제어하게 됩니다. device file은 device node라고도 불리며, mknod 명령어를 통해 생성합니다.
-	
+<br>	
 	
 ```
 	int fd = -1;
@@ -30,7 +30,7 @@ user application process에서 open()함수를 이용하여 해당 device file�
 linux kernel에서 등록한 device driver를 검색하게 됩니다. device driver검색은 linux kernel에서 각 device group별로 검색을 하게
 됩니다. 만약 해당 device driver를 찾지 못하게 되면, open()함수는 -1값을 return 받게 되고 그에 따라service를 요청한 user application 
 process에서 오류 메시지를 띄우고 프로그래믕ㄹ 종료하게 하였였습니다.
-	
+<br>	
 	
 ```
 while(1){
