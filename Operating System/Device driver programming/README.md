@@ -2,7 +2,13 @@
 
 * 라즈베리 파이를 이용하여 여러 센서들(device)을 추상화하여 user application process에서 system intercae를 통해 디바이스에 접근할 수 있도록 해주는 프로그램입니다.
 	
-* Interrupt 방식 구현
+* 키보드 a버튼을 누르면 빨간색 LED 3번 점멸
+
+* 키보드 b -> 1 은 빨간색 LED On, b -> 0은 빨간색 LED Off
+
+* 텍트 스위치를 누르고 있는 동안에는 Green LED ON(Interrupt 방식으로 구현)	
+	
+* 텍트 스위치는 gpio pin 21번에 연결하였습니다. 추후 다른 버튼에 사용하고자 하는 경우, 선언부에 바꿔야 합니다.
 	
 	
 ## User application code
@@ -31,7 +37,7 @@ if(fd < 0){
 user application process에서 open()함수를 이용하여 해당 device file에 접근하게 되면, kernel에서는 open()함수를 서비스 해주기 위해
 linux kernel에서 등록한 device driver를 검색하게 됩니다. device driver검색은 linux kernel에서 각 device group별로 검색을 하게
 됩니다. 만약 해당 device driver를 찾지 못하게 되면, open()함수는 -1값을 return 받게 되고 그에 따라service를 요청한 user application 
-process에서 오류 메시지를 띄우고 프로그래믕ㄹ 종료하게 하였였습니다.
+process에서 오류 메시지를 띄우고 프로그램을 종료하게 하였습니다.
 <br>
 <br>
 <br>
@@ -96,7 +102,8 @@ int getch(void){
 	return ch;
 }
 ```
-이외로 getch()함수의 경우, linux에서 구현이 되어 있지 않으므로 인터넷에 제공된 소스를 사용하였습니다.[출처] https://anythink.tistory.com/entry/Linux-%EB%A6%AC%EB%88%85%EC%8A%A4%EC%97%90%EC%84%9C-getch-%EC%82%AC%EC%9A%A9
+이외로 getch()함수의 경우, linux에서 구현이 되어 있지 않으므로 인터넷에 제공된 소스를 사용하였습니다.
+[출처] (https://anythink.tistory.com/entry/Linux-%EB%A6%AC%EB%88%85%EC%8A%A4%EC%97%90%EC%84%9C-getch-%EC%82%AC%EC%9A%A9)
 
 	
 ## Device driver module code	
@@ -308,8 +315,10 @@ static ssize_t gpio_write(struct file* file, const char* buf, size_t len, loff_t
 ```
 <br>
 <br>
-<br>
-<br>
+## Circuit 구성
+![circuit1](./image/circuit1.jpg)
+
+![circuit2](./image/circuit2.jpg)
 
 ## 동작 모습
 
