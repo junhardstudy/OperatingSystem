@@ -8,7 +8,7 @@
 ## User application code
 
 ```
-	mknod 생성 커맨드
+	mknod /dev/led_module 245 0
 	
 ```
 
@@ -92,7 +92,7 @@ int getch(void){
 	return ch;
 }
 ```
-이외로 getch()함수의 경우, linux에서 구현이 되어 있지 않으므로 인터넷에 제공된 소스를 사용하였습니다.[출처]https://anythink.tistory.com/entry/Linux-%EB%A6%AC%EB%88%85%EC%8A%A4%EC%97%90%EC%84%9C-getch-%EC%82%AC%EC%9A%A9
+이외로 getch()함수의 경우, linux에서 구현이 되어 있지 않으므로 인터넷에 제공된 소스를 사용하였습니다.[출처] https://anythink.tistory.com/entry/Linux-%EB%A6%AC%EB%88%85%EC%8A%A4%EC%97%90%EC%84%9C-getch-%EC%82%AC%EC%9A%A9
 
 	
 ## Device driver module code	
@@ -100,7 +100,7 @@ int getch(void){
 ### module
 	
 ```
-	
+insmod led_module.ko
 ```
 	
 리눅스 디바이스 드라이버는 kernel module로서 취급하여 linux kernel에 등록하여 사용하게 되는데, 등록방법은 kernel module로 컴파일 된 
@@ -285,3 +285,5 @@ static ssize_t gpio_write(struct file* file, const char* buf, size_t len, loff_t
 }
 ```
 
+## 동작 모습
+<iframe width="100%" height="100%" src="https://www.youtube.com/embed/ten6MIvhNzo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
