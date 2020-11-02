@@ -214,8 +214,8 @@ tmp = global_number;//critical section.
 ```c
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 ```
-우선 mutx lock을 하기 전에 모든 lock들을 초기화하는게 필요합니다. 
-PTHREAD_MUTEX_INITIALIZER는 해당 mutx를 default 속성으로 초기화 시킵니다.
+우선 mutex lock을 하기 전에 모든 lock들을 초기화하는게 필요합니다. 
+PTHREAD_MUTEX_INITIALIZER는 해당 mutex를 default 속성으로 초기화 시킵니다.
 
 단, dynamic mutex와 같이 해당 구조체를 선언하고 나중에 초기화 하려면 아래와 같이 하여야 합니다.
 ```c
@@ -228,8 +228,6 @@ pthread_mutex_init(mutex, NULL);
 ```
 <br>
 <br>
-<br>
-<br>
 
 ```c
 if(mutex_flag == 1)pthread_mutex_lock(&mutex);
@@ -239,6 +237,8 @@ if(mutex_flag == 1)pthread_mutex_lock(&mutex);
 if(mutex_flag == 1)pthread_mutex_unlock(&mutex);
 ```
 critical section 전,후로 mutex lock을 하여 어떤 스레드가 global_number값을 변경하는 동안은 다른 스레드가 해당 전역변수에 접근하지 못하게 됩니다.
+
+***
 
 ### 결과 화면
 
