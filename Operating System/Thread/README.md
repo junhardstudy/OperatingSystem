@@ -37,6 +37,7 @@ void *target_func(void *value){
 ```
 
 1. pthread_create()함수
+
 	기본 스레드 생성함수로, 첫번째 인자는 스레드가 성공적으로 생설되었을때 생성된 스레드의 식별자를 가지게 됩니다. 
 	2번째 인자는 스레드 특성을 이용할 때 넘겨주는 인자 입니다. 3번째 인자는 스레드가 생성되면서 실행할 스레드 함수이며, 
 	4번째 인자는 그 때의 스레드 함수의 인자입니다.
@@ -45,28 +46,32 @@ void *target_func(void *value){
 	pthread_create()함수 호출시 void 포인터 함수인 target_func()가 시작되며, command window에 현재 수행되는 스레드 id와
 	각 스레드 함수가 전달받은 인수인 value 값을 변경하고, 표시 해 줍니다.
 	
+	
 2. pthread_exit()
+
 	현재 실행중인 스레드를 종료할 때 사용하는 함수입니다. 
 	
+	
 3. pthread_join()
+
 	특정 스레드가 종료될 때까지 기다리다가 해당 스레드가 종료시 resource를 해제 시켜줍니다. 첫번째 인자는 기다릴 스레드 pthread_t가 들어가고
 	두번째 인자는 pthread_exit()함수가 전달한 종료 값을 전달해주게 됩니다.
 
-	command 결과
-	```
-	<pre><font color="#8AE234"><b>jun@jun-VirtualBox</b></font>:<font color="#729FCF"><b>~/Desktop/study/thread</b></font>$ ./threadtest 
-	thread id(140545642907392) thread function call and count is 1
-	thread id(140545634514688) thread function call and count is 2
-	thread id(140545557001984) thread function call and count is 3
-	thread id(140545548609280) thread function call and count is 4
-	thread id(140545540216576) thread function call and count is 5
-	thread id(140545531823872) thread function call and count is 6
-	thread id(140545523431168) thread function call and count is 7
-	thread id(140545515038464) thread function call and count is 8
-	thread id(140545506645760) thread function call and count is 9
-	thread id(140545498253056) thread function call and count is 10
-	<font color="#8AE234"><b>jun@jun-VirtualBox</b></font>:<font color="#729FCF"><b>~/Desktop/study/thread</b></font>$ </pre>
-	```
+### command 결과
+	
+<pre><font color="#8AE234"><b>jun@jun-VirtualBox</b></font>:<font color="#729FCF"><b>~/Desktop/study/thread</b></font>$ ./threadtest 
+thread id(140545642907392) thread function call and count is 1
+thread id(140545634514688) thread function call and count is 2
+thread id(140545557001984) thread function call and count is 3
+thread id(140545548609280) thread function call and count is 4
+thread id(140545540216576) thread function call and count is 5
+thread id(140545531823872) thread function call and count is 6
+thread id(140545523431168) thread function call and count is 7
+thread id(140545515038464) thread function call and count is 8
+thread id(140545506645760) thread function call and count is 9
+thread id(140545498253056) thread function call and count is 10
+<font color="#8AE234"><b>jun@jun-VirtualBox</b></font>:<font color="#729FCF"><b>~/Desktop/study/thread</b></font>$ </pre>
+	
 
 ***
 
