@@ -1,4 +1,47 @@
+## pthread_mutex 관련 API 함수들
+```c
+pthread_mutex_t mutex;
 
+void main(){
+	pthread_t p_thread[2];
+	int i;
+
+	pthread_mutex_init(&mutexm, NULL);
+
+	for(i = 0; i < 2; i++){
+		pthread_create(&p_thread[i], NULL, thrfunc, NULL);
+	}
+
+	for(i = 0; i < 2; i++){
+		pthread_join(p_thread[i], NULL);
+	}
+
+}
+
+void *thrfunc(){
+	int i=0;
+
+	pthread_mutex_lock(&mutex);
+	for(i = 0; i < 10; i++){
+		global_resource++;
+	}
+	for(i = 0; i < 10; i++){
+		global_resource--;
+	}
+	pthread_mutex_unlock(&mutex);
+
+	printf("value = %d\n",global_resource); 
+}
+```
+1. pthread_mutex_init()
+	mutex를 초기화하는 함수입니다. 2번째 인자 값은 해당 mutex의 속성을 주고, default는 NULL입니다. 
+	
+2. pthread_mutex_lock()
+	해당 critical section을 access하는 스레드가 lock하는 함수입니다.
+
+3. pthread_mutex_unlock()
+	lock 되어 있는 해당 critical section을 unlcok해주는 함수입니다.
+***
 
 ```c
 int main(int argc, char* argv[]){
@@ -174,7 +217,7 @@ pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 우선 mutx lock을 하기 전에 모든 lock들을 초기화하는게 필요합니다. 
 PTHREAD_MUTEX_INITIALIZER는 해당 mutx를 default 속성으로 초기화 시킵니다.
 
-단, 위 방법은 pthread_mutex_t 구조체를 선언함과 동시에 사용하는 것이고, 해당 구조체를 선언하고 나중에 초기화 하려면 아래와 같이 하여야 합니다.
+단, dynamic mutex와 같이 해당 구조체를 선언하고 나중에 초기화 하려면 아래와 같이 하여야 합니다.
 ```c
 pthread_mutex_t *mutex;
 .
@@ -190,13 +233,12 @@ pthread_mutex_init(mutex, NULL);
 
 ```c
 if(mutex_flag == 1)pthread_mutex_lock(&mutex);
-.
-.
-.
+/*********************************************
+			critical section
+*********************************************/
 if(mutex_flag == 1)pthread_mutex_unlock(&mutex);
 ```
 critical section 전,후로 mutex lock을 하여 어떤 스레드가 global_number값을 변경하는 동안은 다른 스레드가 해당 전역변수에 접근하지 못하게 됩니다.
-
 
 ### 결과 화면
 
