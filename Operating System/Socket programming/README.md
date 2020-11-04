@@ -203,8 +203,85 @@ void* serverthread(void* parm)
 socket programming에서 client는 socket() -> connect() -> recv(), or send() -> close()
 
 ```c
+client_socket_addr.sin_family = AF_INET;
+
+host = localhost;
+
+if(argc > 2)port = atoi(argv[1]);
+else port = default_port_num;
+
+client_socket_addr.sin_port = htons((u_short)port);
+```
+client socket의 address에 관한 정보를 저장하는 부분입니다.
+client_socket_addr의 멤버 sin_family로 IPv4 프로토콜을 사용하기 위해 AF_INET값을 가지고, 사용자로부터 port번호를 받아 오던가 또는 default_port_num를 
+htons()함수를 통하여 netwrok byte order로 바꾸어 sin_port 멤버에 저장하게 됩니다.
+
+```c
+if(((int)(ptrh = gethostbyname(host))) == 0){
+	printf("can't map by host name!\n");
+	exit(1);
+}
+.
+.
+.
+if(((int)(ptrp = getprotobyname("tcp"))) == 0){
+		printf("can't map by tcp!\n");
+	}
 
 ```
+각각, host = "Localhost"의 프로토콜에 관한 정보와 TCP프로토콜에 관한 정보를 gethostbyname()을 통하여 가져오는 부분입니다.
+
+```c
+client_socketfd = socket(PF_INET, SOCK_STREAM, ptrp->p_proto);
+
+if(client_socketfd < 0){
+	printf("socket can't create!\n");
+	exit(1);
+}
+```
+소켓에 관한 address정보와 port번호를 이용하여 소켓을 생성하는 부분입니다.
+
+```c
+if((connect(client_socketfd, (struct sockaddr*)&client_socket_addr, sizeof(client_socket_addr))<0)){
+	printf("can't connect to server!\n");
+	exit(1);
+}
+```
+생성된 소켓을 이용하여 server에 연결을 요청하기 위해 connect()함수를 호출합니다. server에 관한 연결 정보는 client_socket_addr의 멤버인
+sin_addr에 저장되어 있습니다.
+```c
+소켓 생성(socket()) 전
+memcpy(&client_socket_addr.sin_addr, ptrh->h_addr, ptrh->h_length);
+```
+
+```c
+while(1){
+	memset(buf, '\0', sizeof(buf));
+	printf("plz type R/S/P(Rock, Scissor, Paper) : ");
+	fgets(buf, 4, stdin);
+
+	send(client_socketfd, buf, sizeof(buf), 0);
+
+	if(buf[0] == 'Q'){
+		printf("the game will be quit..\n");
+                close(client_socketfd);
+                exit(0);
+        }
+
+	printf("waiting for result...\n");
+	
+	recv(client_socketfd, result, sizeof(result), 0);
+
+	printf("you are %s\n", result);
+
+
+}
+```
+사용자에게 서비스를 제공하는 부분으로, 사용자로부터 가위, 바위, 보를 키보드로부터 입력받아 server에 메시지를 send()함수를 통해 보내게 됩니다.
+그리고 사용자로부터 Q를 제외한 R, S, 또는 P를 입력받게 되면 recv()함수에서는 server로부터 메시지를 받을 때 까지 block되게 됩니다.
+
+가위, 바위, 보 게임은 2게임 이상 진행 될 수 있기에 전체 로직은 무한 루프입니다. 만약 게임을 종료하고 싶다면 사용자로부터 Q 입력을 받으면 됩니다.
+
 
 ***
 
