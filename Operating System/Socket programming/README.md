@@ -49,7 +49,8 @@ else {
 main argument로 포트 번호를 입력받으면, 해당 값을 port번호로 사용하게 됩니다. 
 sin_port 멤버는 서버 소켓 address에 저장될 포트번호를 가집니다.(길이는 총 16비트) 저장될 때 host byte order에서 
 netwrok byte oreder로 바꿔야 하므로 htons()함수를 이용합니다.
-
+<br>
+<br>
 ```c
 if (((int)(ptrp = getprotobyname("tcp"))) == 0) {
     printf("can't getprotobyname() function return\n");
@@ -61,7 +62,8 @@ TCP 프로토콜에 대응되는 프로토콜 정보를 얻기 위해 getprotoby
 TCP 프로토콜에 대응되는 포트 번호를 가져옵니다.
 
 여기까지 server socket을 생성하기 위한 포트번호, 그리고 생성된 socket을 bind하기 위해 필요한 socket에 대한 주소 정보들(sockaddr_in)입니다.
-
+<br>
+<br>
 ```c
 socketfd = socket(PF_INET, SOCK_STREAM, port);
 if (socketfd < 0) {
@@ -77,7 +79,8 @@ socket() 함수를 호출할 때, 소켓이 사용할 프로토콜인 PF_INET(ip
 TCP 프로토콜을 인자로 넘겨줍니다.
 
 소켓이 정상적으로 생성이 되면, 0이상의 값을 return하게 되고 그렇지 않을 경우 에러 메시지를 출력하고 프로그램이 종료됩니다.
-
+<br>
+<br>
 ```c
 if (bind(socketfd, (struct sockaddr*) & server_socket_addr, sizeof(server_socket_addr)) < 0) {
     printf("can't bind!\n");
@@ -86,7 +89,8 @@ if (bind(socketfd, (struct sockaddr*) & server_socket_addr, sizeof(server_socket
 ```
 생성한 소켓에 대한 파일 디스크럽터 번호를 가지고 있는 socketfd와 소켓의 address에 관한 정보를 가지고 있는 구조체(sockaddr_in)를 엮어주는 부분입니다.
 인자로서 각각 파일디스크럽터 번호(socketfd), 서버의 IP주소, 그 때의 주소 길이를 넘겨주게 됩니다.
-
+<br>
+<br>
 ```c
 if (listen(socketfd, max_client_num) < 0) {
     printf("can't invocate listen!\n");
@@ -96,7 +100,8 @@ if (listen(socketfd, max_client_num) < 0) {
 이제 client로부터 연결 요청이 들어오는지 확인하기 위해 대기하는 함수 listen()을 호출합니다.
 인자로 소켓 파일디스크럽터(socketfd)와 연결 대기열 크기(max_client_num)을 받게 됩니다.
 연결 대기열 크기는 연결을 요청한 소켓이 대기하는 연결 대기열의 크기를 의미합니다.
-
+<br>
+<br>
 ```c
 addr_len = sizeof(client_socket_addr);
 printf("Server start, and running...\n");
@@ -131,7 +136,8 @@ accept()가 정상적으로 수행되면, 연결한 client마다 전용 스레�
 (void*)client_socketfd
 ``` 
 는 해당 전용 스레드에서 전용 client socket 연결을 종료하는데 사용됩니다.
-
+<br>
+<br>
 ```c
 void* serverthread(void* parm)
 {
@@ -195,12 +201,16 @@ void* serverthread(void* parm)
 만약 2명의 client가 접속하게 되고, 모두 가위, 바위, 보 중에 하나의 메시지를 server로 전송했다면 proceed_round()함수를 호출하여 경기 결과를 처리하게 됩니다.
 
 게임은 여러번 반복될 수 있기에 전체 로직은 무한 루프를 돌게 했습니다. 만약 게임을 중지하고 싶다면 client로 부터 Q 메시지를 받아 게임을 끝낼 수 있습니다.
+<br>
+<br>
 
 ## client.c
 
 사용자로부터 가위(S), 바위(R), 보(P), 또는 종료(Q)를 입력받아 server로 메시지를 전달하고 그에 대응하는 결과를 받는 프로그램입니다.
 
 socket programming에서 client는 socket() -> connect() -> recv(), or send() -> close()
+<br>
+<br>
 
 ```c
 client_socket_addr.sin_family = AF_INET;
@@ -215,7 +225,8 @@ client_socket_addr.sin_port = htons((u_short)port);
 client socket의 address에 관한 정보를 저장하는 부분입니다.
 client_socket_addr의 멤버 sin_family로 IPv4 프로토콜을 사용하기 위해 AF_INET값을 가지고, 사용자로부터 port번호를 받아 오던가 또는 default_port_num를 
 htons()함수를 통하여 netwrok byte order로 바꾸어 sin_port 멤버에 저장하게 됩니다.
-
+<br>
+<br>
 ```c
 if(((int)(ptrh = gethostbyname(host))) == 0){
 	printf("can't map by host name!\n");
@@ -230,7 +241,8 @@ if(((int)(ptrp = getprotobyname("tcp"))) == 0){
 
 ```
 각각, host = "Localhost"의 프로토콜에 관한 정보와 TCP프로토콜에 관한 정보를 gethostbyname()을 통하여 가져오는 부분입니다.
-
+<br>
+<br>
 ```c
 client_socketfd = socket(PF_INET, SOCK_STREAM, ptrp->p_proto);
 
@@ -240,7 +252,8 @@ if(client_socketfd < 0){
 }
 ```
 소켓에 관한 address정보와 port번호를 이용하여 소켓을 생성하는 부분입니다.
-
+<br>
+<br>
 ```c
 if((connect(client_socketfd, (struct sockaddr*)&client_socket_addr, sizeof(client_socket_addr))<0)){
 	printf("can't connect to server!\n");
@@ -249,6 +262,8 @@ if((connect(client_socketfd, (struct sockaddr*)&client_socket_addr, sizeof(clien
 ```
 생성된 소켓을 이용하여 server에 연결을 요청하기 위해 connect()함수를 호출합니다. server에 관한 연결 정보는 client_socket_addr의 멤버인
 sin_addr에 저장되어 있습니다.
+<br>
+<br>
 ```c
 소켓 생성(socket()) 전
 memcpy(&client_socket_addr.sin_addr, ptrh->h_addr, ptrh->h_length);
@@ -281,7 +296,8 @@ while(1){
 그리고 사용자로부터 Q를 제외한 R, S, 또는 P를 입력받게 되면 recv()함수에서는 server로부터 메시지를 받을 때 까지 block되게 됩니다.
 
 가위, 바위, 보 게임은 2게임 이상 진행 될 수 있기에 전체 로직은 무한 루프입니다. 만약 게임을 종료하고 싶다면 사용자로부터 Q 입력을 받으면 됩니다.
-
+<br>
+<br>
 
 ***
 
