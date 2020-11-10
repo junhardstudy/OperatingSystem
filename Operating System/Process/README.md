@@ -1,7 +1,7 @@
 # Process
 프로세스는 메모리에 load되어 실행되고 있는 프로그램의 인스턴스를 의미 합니다. 프로세스에 대한 메모리 구조는 아래와 같은데,
 	
-![processmemoryview](./image/processmemoryview.jpg)
+![processmemoryview](./image/process.png)
 
 프로세스는 생성될 때 마다, 또는 동일 프로세스에 대해 fork할 때 마다 각각 전용 code, data, stack, heap영역을 할당 받습니다.
 

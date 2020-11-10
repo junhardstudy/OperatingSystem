@@ -147,7 +147,7 @@ add=cdev_add(&gpio_cdev, devno, cnt);
 ``` 
 Linux device driver의 경우, 크게 character driver, block driver, network driver 3가지의 group으로 나뉘게 됩니다. 저희는 device를 file처럼
 접근하여 직접 제어를 수행하는 형태를 가지므로 register_chrdev_region()함수를 통하여 1개의 char device를 GPIO_DEVICE로 등록해주게 됩니다.
-우리가 정의 한 file_operations 구조체를 등록 해 주기위해, cdev_init(), cdev_add()함수를 순차적으로 호출하여 cdev 구조체로 초기화 -> 커널에 등록하는 과정을 수행합니다.
+제가 정의 한 file_operations 구조체를 등록 해 주기위해, cdev_init(), cdev_add()함수를 순차적으로 호출하여 cdev 구조체로 초기화 -> 커널에 등록하는 과정을 수행합니다.
 <br>
 <br>
 <br>
